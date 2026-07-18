@@ -400,7 +400,7 @@ function showResult() {
   const pair = TYPES[t.pair.type];
   document.getElementById("r-pair").innerHTML =
     "<span class='pair-name'>" + pair.nick + " (" + pair.name + ")</span> — " + t.pair.why +
-    ". 주변에 있을 것 같은 사람에게 테스트를 보내보세요.";
+    ". 테스트를 보내거나, 스토리에 결과를 올리고 그 사람을 태그해보세요.";
 
   document.getElementById("r-pointer").textContent = t.pointer;
   document.getElementById("cta-btn").textContent = t.cta;
@@ -620,7 +620,7 @@ function drawCard() {
   x.fillStyle = t.color; x.font = "700 42px " + KO;
   x.fillText("너는 어떤 유형일까?", 540, 1745);
   x.fillStyle = "#b6b6c8"; x.font = "600 36px " + KO;
-  x.fillText("30초 테스트 → @ellieisfree 프로필 링크", 540, 1802);
+  x.fillText("@ellieisfree 태그하면 리포스트 · 테스트는 프로필 링크", 540, 1802);
   x.fillStyle = "#77778c"; x.font = "32px " + KO;
   x.fillText("『왜 내가 쓰는 AI만 멍청해 보일까?』에서 시작된 테스트", 540, 1862);
   return c;
@@ -654,7 +654,9 @@ function shareCard() {
     a.href = canvas.toDataURL("image/png");
     a.download = "ai-type-result.png";
     a.click();
-    toast("이미지가 저장됐어요. 스토리나 프로필에 올려보세요!");
+    const shareUrl = (location.protocol === "file:" ? PREORDER_URL : location.origin + location.pathname) + "?from=" + TYPES[decideType(answers)].key;
+    if (navigator.clipboard) navigator.clipboard.writeText(shareUrl).catch(() => {});
+    toast("이미지 저장 + 링크 복사 완료. 스토리 링크 스티커에 붙여넣어 보세요!");
   }, "image/png");
 }
 
