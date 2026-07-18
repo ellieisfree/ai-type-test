@@ -87,7 +87,6 @@
   .t-chip.hot .blk i.on { opacity: 1; }
   .type-desc { font-size: 15.5px; word-break: keep-all; overflow-wrap: break-word; }
   .type-desc .lead { font-weight: 800; font-size: 16.5px; }
-  .pair-box .pair-guide { display: block; font-size: 13.5px; color: var(--sub); margin-top: 4px; }
   .book-line .bl-title { font-weight: 700; font-size: 15px; color: var(--ink); }
   .section-label { font-size: 13px; font-weight: 700; color: var(--sub); margin: 22px 0 8px; letter-spacing: .04em; }
   .unsaid { background: var(--card); border-radius: 14px; padding: 16px; font-size: 15px; word-break: keep-all; }
@@ -100,8 +99,6 @@
   .dist-row .cnt { width: 16px; text-align: right; color: var(--sub); }
   .growth { font-size: 13.5px; color: var(--sub); margin-top: 8px; word-break: keep-all; }
   .growth b { color: var(--type-color, var(--accent)); }
-  .pair-box { background: var(--card); border-radius: 14px; padding: 16px; font-size: 15px; word-break: keep-all; }
-  .pair-box .pair-name { font-weight: 800; color: var(--type-color, var(--accent)); }
   .book-line { font-size: 14px; color: var(--sub); text-align: center; margin-top: 24px; word-break: keep-all; white-space: pre-line; }
   .toast {
     position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px);
@@ -176,9 +173,6 @@
   <div class="section-label">응답 분포</div>
   <div id="r-dist"></div>
   <p class="growth" id="r-growth"></p>
-
-  <div class="section-label">함께 쓰면 최고의 페어</div>
-  <div class="pair-box" id="r-pair"></div>
 
   <button class="btn accent cta-main" id="cta-btn" onclick="goPreorder()"></button>
 
@@ -397,10 +391,6 @@ function showResult() {
     : "당신 안의 설계자 기질 <b>8분의 " + dCount + "</b>.<br>조건을 하나씩 정할 때마다 유형이 바뀐다.";
 
   // 궁합: 친구에게 보낼 이유
-  const pair = TYPES[t.pair.type];
-  document.getElementById("r-pair").innerHTML =
-    "<span class='pair-name'>" + pair.nick + " (" + pair.name + ")</span>. " + t.pair.why +
-    ".<span class=\"pair-guide\">테스트를 보내거나, 스토리에 결과를 올리고 그 사람을 태그해보세요.</span>";
 
   const ctaLines = t.cta.split("\n");
   document.getElementById("cta-btn").innerHTML =
