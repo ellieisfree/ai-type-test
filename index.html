@@ -123,6 +123,7 @@
     <span class="t-chip">협업형 ★★★★</span><span class="t-chip hot">설계자형 ★★★★★</span>
   </div>
   <p class="sub" style="font-size:13.5px">당신은 어느 쪽인가요?</p>
+  <p class="sub" id="from-line" style="display:none; margin-top:10px; font-size:14.5px; color:var(--accent); font-weight:700"></p>
   <button class="btn accent" onclick="startQuiz()">30초 테스트 시작</button>
 </section>
 
@@ -140,8 +141,17 @@
     <p>잠깐, 방금 8개 질문을 떠올려보세요.</p>
     <p style="margin-top:14px"><span class="em">AI가 얼마나 똑똑한지 묻는 질문은<br>하나도 없었어요.</span></p>
     <p style="margin-top:14px">전부 '내가 AI에게 뭘 말했는지'에 대한 질문이었죠. 결과가 갈리는 이유도 바로 거기에 있어요.</p>
+    <p style="margin-top:14px; font-size:15px; color:#b6b6c8" id="reveal-personal"></p>
   </div>
-  <button class="btn accent" onclick="showResult()">내 유형 확인하기</button>
+  <button class="btn accent" onclick="startAnalyzing()">내 유형 확인하기</button>
+</section>
+
+<!-- 분석 연출 -->
+<section id="analyzing" class="screen center">
+  <div style="text-align:center">
+    <div class="progress-wrap" style="max-width:220px;margin:0 auto 18px"><div class="progress-bar" id="a-bar"></div></div>
+    <p class="sub" id="a-msg" style="font-size:16px"></p>
+  </div>
 </section>
 
 <!-- 결과 -->
@@ -187,6 +197,16 @@
 // ─────────────────────────────────────────────
 const PREORDER_URL = "https://litt.ly/ellieisfree";
 const PUB_DATE = "2026-07-21"; // 출간일 (D-day 배지)
+
+// ── 계측 (7차 개정) ──
+// GoatCounter 계정 발급 후 코드 기입 (예: "clearset" → https://clearset.goatcounter.com)
+// 비어 있으면 계측을 조용히 생략한다 — 페이지 동작에 영향 없음.
+const GC_CODE = "";
+function track(event) {
+  if (!GC_CODE || location.protocol === "file:") return;
+  const img = new Image();
+  img.src = "https://" + GC_CODE + ".goatcounter.com/count?p=" + encodeURIComponent("/" + event) + "&rnd=" + Date.now();
+}
 
 // 선택지 순서 고정: [0]검색형 [1]지시형 [2]협업형 [3]설계자형
 const QUESTIONS = [
@@ -292,7 +312,7 @@ function show(id) {
   window.scrollTo(0, 0);
 }
 
-function startQuiz() { answers = []; current = 0; show("quiz"); renderQuestion(); }
+function startQuiz() { answers = []; current = 0; show("quiz"); renderQuestion(); track("start"); }
 
 function renderQuestion() {
   const q = QUESTIONS[current];
@@ -321,10 +341,31 @@ function renderQuestion() {
 function pick(idx) {
   answers[current] = idx;
   if (current < QUESTIONS.length - 1) { current++; renderQuestion(); }
-  else show("reveal");
+  else {
+    // 인터스티셜 개인화: ①·② 응답 문항을 짚어 '내 얘기'로 만든다
+    const qs = answers.map((a, i) => (a <= 1 ? "Q" + (i + 1) : null)).filter(Boolean);
+    document.getElementById("reveal-personal").textContent = qs.length
+      ? "특히 " + qs.slice(0, 3).join(" · ") + "에서 당신은 조건을 생략했어요. 결과에서 확인해보세요."
+      : "당신은 거의 모든 문항에서 조건을 먼저 채우고 있었어요.";
+    show("reveal");
+    track("complete");
+  }
 }
 
 function goBack() { if (current > 0) { current--; renderQuestion(); } }
+
+// 결과 도출 연출: 2초 2단계 — '분석받았다'는 체감을 만든다
+function startAnalyzing() {
+  show("analyzing");
+  const bar = document.getElementById("a-bar");
+  const msg = document.getElementById("a-msg");
+  bar.style.transition = "width 1s ease";
+  bar.style.width = "0";
+  msg.textContent = "당신이 말하지 않은 것을 세는 중…";
+  setTimeout(() => { bar.style.width = "55%"; }, 60);
+  setTimeout(() => { msg.textContent = "8개의 답에서 패턴을 찾는 중…"; bar.style.width = "100%"; }, 1050);
+  setTimeout(showResult, 2050);
+}
 
 function showResult() {
   const t = TYPES[decideType(answers)];
@@ -365,15 +406,24 @@ function showResult() {
   document.getElementById("cta-btn").textContent = t.cta;
   show("result");
   res.classList.add(t.theme);
+  track("result-" + t.key);
 }
 
 function restart() { show("intro"); }
-function goPreorder() { window.open(PREORDER_URL, "_blank"); }
+// CTA에 UTM 부착 — litt.ly 유입 중 테스트발·유형별 기여를 구분
+function goPreorder() {
+  const t = TYPES[decideType(answers)];
+  track("cta-" + t.key);
+  window.open(PREORDER_URL + "?utm_source=type-test&utm_medium=web&utm_campaign=preorder&utm_content=" + t.key, "_blank");
+}
 
 // 친구에게 보내기 — 다크소셜(카톡·DM) 루프. 모바일은 OS 공유시트, 미지원 시 문구 복사
+// URL에 ?from=<유형>을 실어 받은 친구의 인트로를 개인화한다(페어 루프)
 function shareLink() {
   const t = TYPES[decideType(answers)];
-  const url = location.protocol === "file:" ? PREORDER_URL : location.href.split("#")[0];
+  track("share-link");
+  const base = location.protocol === "file:" ? PREORDER_URL : location.origin + location.pathname;
+  const url = base + "?from=" + t.key;
   const text = "나는 '" + t.nick + "'(" + t.name + ")이래 — " + t.tagline + ".\n내 최고의 페어는 '" + TYPES[t.pair.type].nick + "'이라는데, 너는 어떤 유형이야? 30초 테스트 👉 " + url;
   if (navigator.share) {
     navigator.share({ text: text }).catch(() => {});
@@ -576,7 +626,20 @@ function drawCard() {
   return c;
 }
 
+// ?from=유형 진입 시 인트로 개인화 — 친구 초대 루프의 착지 문구
+(function () {
+  const fromKey = new URLSearchParams(location.search).get("from");
+  const ft = TYPES.find(t => t.key === fromKey);
+  if (!ft) return;
+  const el = document.getElementById("from-line");
+  el.textContent = "친구는 '" + ft.nick + "'(" + ft.name + ")이래요. 당신은 어떤 유형일까요?";
+  el.style.display = "block";
+  track("visit-from-" + ft.key);
+})();
+track("view");
+
 function shareCard() {
+  track("share-card");
   const canvas = drawCard();
   canvas.toBlob(async (blob) => {
     const file = new File([blob], "ai-type-result.png", { type: "image/png" });
