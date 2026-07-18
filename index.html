@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>왜 내가 쓰는 AI만 멍청해 보일까? — 30초 AI 활용 유형 테스트</title>
+<title>왜 내가 쓰는 AI만 멍청해 보일까? · 30초 AI 활용 유형 테스트</title>
 <meta property="og:title" content="30초 AI 활용 유형 테스트">
 <meta property="og:description" content="내 AI가 멍청했던 게 아니었다. 같은 AI를 써도 결과가 다른 이유를 30초 만에 확인하세요.">
 <style>
@@ -91,7 +91,6 @@
   .growth b { color: var(--type-color, var(--accent)); }
   .pair-box { background: var(--card); border-radius: 14px; padding: 16px; font-size: 15px; word-break: keep-all; }
   .pair-box .pair-name { font-weight: 800; color: var(--type-color, var(--accent)); }
-  .pointer { background: var(--card); border-left: 4px solid var(--type-color, var(--accent)); border-radius: 0 12px 12px 0; padding: 14px 16px; font-size: 15px; word-break: keep-all; }
   .book-line { font-size: 14px; color: var(--sub); text-align: center; margin-top: 24px; word-break: keep-all; white-space: pre-line; }
   .toast {
     position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px);
@@ -136,7 +135,7 @@
   <div class="reveal-box slide-in">
     <p>잠깐, 방금 8개 질문을 떠올려보세요.</p>
     <p style="margin-top:14px"><span class="em">AI가 얼마나 똑똑한지 묻는 질문은<br>하나도 없었어요.</span></p>
-    <p style="margin-top:14px">전부 '내가 AI에게 뭘 말했는지'에 대한 질문이었죠. 결과가 갈리는 이유도 바로 거기에 있어요.</p>
+    <p style="margin-top:14px">전부 '내가 AI에게 뭘 말했는지'에 대한 질문이었죠.<br>결과가 갈리는 이유도 바로 거기에 있어요.</p>
     <p style="margin-top:14px; font-size:15px; color:#b6b6c8" id="reveal-personal"></p>
   </div>
   <button class="btn accent" onclick="startAnalyzing()">내 유형 확인하기</button>
@@ -170,9 +169,6 @@
   <div class="section-label">함께 쓰면 최고의 페어</div>
   <div class="pair-box" id="r-pair"></div>
   <button class="btn outline" onclick="shareLink()" style="margin-top:8px">내 페어 찾으러 보내기</button>
-
-  <div class="section-label">당신의 페이지는 이미 정해져 있다</div>
-  <div class="pointer" id="r-pointer"></div>
 
   <button class="btn accent cta-main" id="cta-btn" onclick="goPreorder()"></button>
 
@@ -239,7 +235,7 @@ const QUESTIONS = [
     "말 안 해도 알아서 해주는 게 AI 아닌가",
     "중요한 건 말했으니 나머지는 AI 몫이다",
     "빠진 게 보이면 대화 중에 채운다",
-    "말하지 않은 것이 결과를 정한다 — 그래서 먼저 적는다" ]},
+    "말하지 않은 것이 결과를 정한다. 그래서 먼저 적는다" ]},
   { axis: "관점", q: "당신에게 AI란?", a: [
     "더 빠른 검색창",
     "말 잘 들어야 하는 부하 직원",
@@ -253,26 +249,22 @@ const TYPES = [
     nick: "빛의 속도 질문러", tagline: "AI를 검색창처럼 쓰는 사람",
     pair: { type: 3, why: "당신의 한 줄 질문에 조건을 붙여줄 사람" },
     cta: "검색창처럼 쓰던 AI가 달라지는 법\n→ 책에서 확인하기",
-    desc: "당신은 AI를 '더 빠른 검색창'으로 쓰고 있다. AI가 멍청해 보였다면, 그건 당신이 아무 조건도 주지 않았기 때문이다. 프롬프트는 질문이 아니라 조건이다 — 이 한 문장이 당신의 결과를 바꾼다.",
-    pointer: "1장, 존재하지 않는 논문을 추천받은 사람의 이야기에서 시작하라." },
+    desc: "당신은 AI를 '더 빠른 검색창'으로 쓰고 있다. AI가 멍청해 보였다면, 그건 당신이 아무 조건도 주지 않았기 때문이다. 프롬프트는 질문이 아니라 조건이다. 이 한 문장이 당신의 결과를 바꾼다." },
   { key: "command", name: "지시형", stars: "★★★☆☆", theme: "theme-command", color: "#9C9DE0",
     nick: "결과 먼저 지시러", tagline: "명령은 하지만 설명은 안 하는 사람",
     pair: { type: 2, why: "당신의 명령에 대화를 붙여줄 사람" },
     cta: "'보고서처럼'의 함정에서 빠져나오는 법\n→ 책에서 확인하기",
-    desc: "당신은 명령은 하지만 설명은 하지 않는다. '보고서처럼'이라는 말의 함정 — 형식만 요구하면 형식만 그럴듯한 답이 온다. 빠진 것은 지시가 아니라 조건이다.",
-    pointer: "'보고서처럼'의 함정 — 당신이 매번 밟는 그 지점이 책에 있다." },
+    desc: "당신은 명령은 하지만 설명은 하지 않는다. '보고서처럼'이라는 말의 함정. 형식만 요구하면 형식만 그럴듯한 답이 온다. 빠진 것은 지시가 아니라 조건이다." },
   { key: "collab", name: "협업형", stars: "★★★★☆", theme: "theme-collab", color: "#7678C4",
     nick: "티키타카 조련사", tagline: "AI와 핑퐁을 잘 치는 사람",
     pair: { type: 3, why: "당신의 핑퐁을 구조로 만들어줄 사람" },
     cta: "핑퐁 세 번을 한 번으로 줄이는 설계\n→ 책에서 확인하기",
-    desc: "당신은 AI와 대화로 답을 다듬을 줄 안다. 다만 매번 핑퐁으로 고치는 시간, 절반은 줄일 수 있다. 처음부터 조건을 설계하면 세 번 주고받을 일이 한 번에 끝난다.",
-    pointer: "핑퐁 세 번을 한 번으로 줄이는 설계가 PART 2다." },
+    desc: "당신은 AI와 대화로 답을 다듬을 줄 안다. 다만 매번 핑퐁으로 고치는 시간, 절반은 줄일 수 있다. 처음부터 조건을 설계하면 세 번 주고받을 일이 한 번에 끝난다." },
   { key: "designer", name: "설계자형", stars: "★★★★★", theme: "theme-designer", color: "#8A8BD4",
     nick: "조건의 건축가", tagline: "말하기 전에 조건부터 짓는 사람",
     pair: { type: 0, why: "당신의 설계에 속도를 붙여줄 사람" },
     cta: "설계 감각을 반복 가능한 구조로\n→ 책에서 확인하기",
-    desc: "당신은 이미 설명을 설계하는 사람이다. 말하지 않은 것이 결과를 정한다는 걸 안다. 이제 그 감각을 반복 가능한 구조로 만들 차례다.",
-    pointer: "감각을 반복 가능한 구조로 — 당신은 이 책의 검증자다." },
+    desc: "당신은 이미 설명을 설계하는 사람이다. 말하지 않은 것이 결과를 정한다는 걸 안다. 이제 그 감각을 반복 가능한 구조로 만들 차례다." },
 ];
 
 // ─────────────────────────────────────────────
@@ -373,7 +365,7 @@ function showResult() {
 
   const axes = unsaidAxes(answers);
   document.getElementById("r-unsaid").innerHTML = axes.length
-    ? "<b>" + axes.join(", ") + "</b> — 말하지 않은 것이 결과를 정한다. 여기서부터 채우면 된다."
+    ? "<b>" + axes.join(", ") + "</b>. 말하지 않은 것이 결과를 정한다. 여기서부터 채우면 된다."
     : "지금은 비어 있는 조건이 거의 없다. 문제는 조건이 아니라 <b>구조의 반복 가능성</b>이다.";
 
   const counts = tally(answers);
@@ -388,16 +380,15 @@ function showResult() {
   // 성장 서사: 설계자 기질 게이지 (재도전·책 연결 동기)
   const dCount = counts[3];
   document.getElementById("r-growth").innerHTML = mine === 3
-    ? "설계자 기질 <b>8분의 " + dCount + "</b> — 남은 과제는 반복 가능한 구조다."
-    : "당신 안의 설계자 기질 <b>8분의 " + dCount + "</b> — 조건을 하나씩 정할 때마다 유형이 바뀐다.";
+    ? "설계자 기질 <b>8분의 " + dCount + "</b>. 남은 과제는 반복 가능한 구조다."
+    : "당신 안의 설계자 기질 <b>8분의 " + dCount + "</b>. 조건을 하나씩 정할 때마다 유형이 바뀐다.";
 
   // 궁합: 친구에게 보낼 이유
   const pair = TYPES[t.pair.type];
   document.getElementById("r-pair").innerHTML =
-    "<span class='pair-name'>" + pair.nick + " (" + pair.name + ")</span> — " + t.pair.why +
+    "<span class='pair-name'>" + pair.nick + " (" + pair.name + ")</span>. " + t.pair.why +
     ". 테스트를 보내거나, 스토리에 결과를 올리고 그 사람을 태그해보세요.";
 
-  document.getElementById("r-pointer").textContent = t.pointer;
   document.getElementById("cta-btn").textContent = t.cta;
   show("result");
   res.classList.add(t.theme);
@@ -419,7 +410,7 @@ function shareLink() {
   track("share-link");
   const base = location.protocol === "file:" ? PREORDER_URL : location.origin + location.pathname;
   const url = base + "?from=" + t.key;
-  const text = "나는 '" + t.nick + "'(" + t.name + ")이래 — " + t.tagline + ".\n내 최고의 페어는 '" + TYPES[t.pair.type].nick + "'이라는데, 너는 어떤 유형이야? 30초 테스트 👉 " + url;
+  const text = "나는 '" + t.nick + "'(" + t.name + ")이래. " + t.tagline + ".\n내 최고의 페어는 '" + TYPES[t.pair.type].nick + "'이라는데, 너는 어떤 유형이야? 30초 테스트 👉 " + url;
   if (navigator.share) {
     navigator.share({ text: text }).catch(() => {});
     return;
