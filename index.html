@@ -136,7 +136,7 @@
     <p>잠깐, 방금 8개 질문을 떠올려보세요.</p>
     <p style="margin-top:14px"><span class="em">AI가 얼마나 똑똑한지 묻는 질문은<br>하나도 없었어요.</span></p>
     <p style="margin-top:14px">전부 '내가 AI에게 뭘 말했는지'에 대한 질문이었죠.<br>결과가 갈리는 이유도 바로 거기에 있어요.</p>
-    <p style="margin-top:14px; font-size:15px; color:#b6b6c8" id="reveal-personal"></p>
+    <p style="margin-top:14px; font-size:15px; color:#b6b6c8; white-space:pre-line" id="reveal-personal"></p>
   </div>
   <button class="btn accent" onclick="startAnalyzing()">내 유형 확인하기</button>
 </section>
@@ -331,7 +331,7 @@ function pick(idx) {
     // 인터스티셜 개인화: ①·② 응답 문항을 짚어 '내 얘기'로 만든다
     const qs = answers.map((a, i) => (a <= 1 ? "Q" + (i + 1) : null)).filter(Boolean);
     document.getElementById("reveal-personal").textContent = qs.length
-      ? "특히 " + qs.slice(0, 3).join(" · ") + "에서 당신은 조건을 생략했어요. 결과에서 확인해보세요."
+      ? "특히 " + qs.slice(0, 3).join(" · ") + "에서 당신은 조건을 생략했어요.\n결과에서 확인해보세요."
       : "당신은 거의 모든 문항에서 조건을 먼저 채우고 있었어요.";
     show("reveal");
     track("complete");
@@ -364,7 +364,7 @@ function showResult() {
 
   const axes = unsaidAxes(answers);
   document.getElementById("r-unsaid").innerHTML = axes.length
-    ? "<b>" + axes.join(", ") + "</b>. 말하지 않은 것이 결과를 정한다. 여기서부터 채우면 된다."
+    ? "<b>" + axes.join(", ") + "</b>.<br>말하지 않은 것이 결과를 정한다. 여기서부터 채우면 된다."
     : "지금은 비어 있는 조건이 거의 없다. 문제는 조건이 아니라 <b>구조의 반복 가능성</b>이다.";
 
   const counts = tally(answers);
