@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>왜 내가 쓰는 AI만 멍청해 보일까? — 30초 AI 활용 유형 테스트</title>
+<meta property="og:title" content="30초 AI 활용 유형 테스트">
+<meta property="og:description" content="내 AI가 멍청했던 게 아니었다. 같은 AI를 써도 결과가 다른 이유를 30초 만에 확인하세요.">
+<style>
+  :root {
+    --accent: #6667AB;
+    --bg: #f7f7fa;
+    --ink: #1c1c24;
+    --sub: #5c5c6b;
+    --card: #ffffff;
+    --line: #e4e4ec;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .screen { display: none; min-height: 100dvh; padding: 24px 20px calc(24px + env(safe-area-inset-bottom)); max-width: 480px; margin: 0 auto; flex-direction: column; }
+  .screen.active { display: flex; }
+  .center { justify-content: center; }
+  .teaser { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 10px; }
+  .t-chip {
+    font-size: 13px; font-weight: 600; color: var(--sub);
+    border: 1.5px solid var(--line); background: var(--card);
+    padding: 6px 12px; border-radius: 999px;
+  }
+  .t-chip.hot { color: var(--accent); border-color: var(--accent); }
+  .badge {
+    display: inline-block; align-self: flex-start;
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px; letter-spacing: .02em;
+  }
+  h1 { font-size: 28px; line-height: 1.38; margin: 18px 0 12px; word-break: keep-all; letter-spacing: -.02em; }
+  .sub { color: var(--sub); font-size: 15px; word-break: keep-all; }
+  .btn {
+    display: block; width: 100%; border: 0; cursor: pointer;
+    background: var(--ink); color: #fff; font-size: 17px; font-weight: 700;
+    padding: 16px; border-radius: 14px; margin-top: 24px; font-family: inherit;
+  }
+  .btn.accent { background: var(--accent); }
+  .btn.ghost { background: transparent; color: var(--sub); font-weight: 500; font-size: 14px; padding: 10px; margin-top: 8px; }
+  .btn.outline { background: var(--card); color: var(--ink); border: 1.5px solid var(--line); font-weight: 600; margin-top: 10px; }
+  .btn:active { transform: scale(.985); }
+  /* 문항 */
+  .progress-wrap { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+  .progress-bar { height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+  .progress-label { font-size: 13px; color: var(--sub); margin-bottom: 20px; }
+  .q-text { font-size: 21px; font-weight: 700; line-height: 1.45; margin-bottom: 22px; word-break: keep-all; min-height: 3.5em; }
+  .choice {
+    display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+    background: var(--card); border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 16px; margin-bottom: 10px; font-size: 16px; line-height: 1.5; min-height: 56px;
+    word-break: keep-all; color: var(--ink); transition: border-color .15s, background .15s;
+  }
+  .choice:active { border-color: var(--accent); background: #f2f2fb; }
+  .choice .num { color: var(--accent); font-weight: 700; margin-right: 6px; }
+  .slide-in { animation: slide .28s ease; }
+  @keyframes slide { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+  /* 인터스티셜 */
+  .reveal-box { background: var(--ink); color: #fff; border-radius: 18px; padding: 28px 24px; }
+  .reveal-box p { word-break: keep-all; font-size: 17px; line-height: 1.7; }
+  .reveal-box .em { color: #b9baf0; font-weight: 700; }
+  /* 결과 */
+  .result-card { background: var(--card); border-radius: 18px; padding: 26px 22px; border-top: 6px solid var(--type-color, var(--accent)); box-shadow: 0 4px 20px rgba(0,0,0,.06); }
+  .nick-label { font-size: 13px; font-weight: 700; color: var(--sub); letter-spacing: .05em; margin-bottom: 4px; }
+  .nick { font-size: 30px; font-weight: 900; color: var(--ink); word-break: keep-all; line-height: 1.3; }
+  .type-name { font-size: 19px; font-weight: 800; color: var(--type-color, var(--accent)); margin-top: 6px; }
+  .stars { font-size: 20px; letter-spacing: 3px; margin: 6px 0 14px; color: var(--type-color, var(--accent)); }
+  .type-desc { font-size: 15.5px; word-break: keep-all; }
+  .section-label { font-size: 13px; font-weight: 700; color: var(--sub); margin: 22px 0 8px; letter-spacing: .04em; }
+  .unsaid { background: var(--card); border-radius: 14px; padding: 16px; font-size: 15px; word-break: keep-all; }
+  .unsaid b { color: var(--type-color, var(--accent)); }
+  .dist-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; }
+  .dist-row .name { width: 52px; color: var(--sub); flex-shrink: 0; }
+  .dist-row .bar-bg { flex: 1; height: 12px; background: var(--line); border-radius: 6px; overflow: hidden; }
+  .dist-row .bar { height: 100%; border-radius: 6px; background: var(--type-color, var(--accent)); opacity: .45; }
+  .dist-row.mine .bar { opacity: 1; }
+  .dist-row .cnt { width: 16px; text-align: right; color: var(--sub); }
+  .growth { font-size: 13.5px; color: var(--sub); margin-top: 8px; word-break: keep-all; }
+  .growth b { color: var(--type-color, var(--accent)); }
+  .pair-box { background: var(--card); border-radius: 14px; padding: 16px; font-size: 15px; word-break: keep-all; }
+  .pair-box .pair-name { font-weight: 800; color: var(--type-color, var(--accent)); }
+  .pointer { background: var(--card); border-left: 4px solid var(--type-color, var(--accent)); border-radius: 0 12px 12px 0; padding: 14px 16px; font-size: 15px; word-break: keep-all; }
+  .gift { font-size: 13.5px; color: var(--sub); text-align: center; margin-top: 10px; word-break: keep-all; }
+  .book-line { font-size: 14px; color: var(--sub); text-align: center; margin-top: 24px; word-break: keep-all; }
+  /* 이메일 폼 */
+  .email-box { background: var(--card); border-radius: 14px; padding: 18px 16px; margin-top: 12px; }
+  .email-box p { font-size: 14.5px; word-break: keep-all; margin-bottom: 10px; }
+  .email-box input {
+    width: 100%; padding: 13px 14px; font-size: 16px; border: 1.5px solid var(--line);
+    border-radius: 10px; font-family: inherit; margin-bottom: 8px;
+  }
+  .email-box .done { color: var(--accent); font-weight: 700; text-align: center; padding: 8px 0; }
+  .toast {
+    position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: #fff; font-size: 14px; padding: 12px 20px;
+    border-radius: 999px; opacity: 0; pointer-events: none; transition: all .3s; white-space: nowrap;
+  }
+  .toast.on { opacity: 1; transform: translateX(-50%); }
+  /* 유형 테마 4종 — 베리페리 명도 사다리(브랜드 2색 체계 내) */
+  .theme-search   { --type-color: #9B9CB8; }
+  .theme-command  { --type-color: #7678C4; }
+  .theme-collab   { --type-color: #4B4C82; }
+  .theme-designer { --type-color: #6667AB; }
+</style>
+</head>
+<body>
+
+<!-- 인트로 -->
+<section id="intro" class="screen active center">
+  <span class="badge" id="dday-badge">7/21 출간</span>
+  <h1>왜 내가 쓰는 AI만<br>멍청해 보일까?</h1>
+  <p class="sub">같은 AI를 쓰는데 왜 내 결과만 이럴까요? 8개 질문, 30초면 당신이 AI를 쓰는 방식이 드러납니다.</p>
+  <div class="teaser">
+    <span class="t-chip">검색형 ★★</span><span class="t-chip">지시형 ★★★</span>
+    <span class="t-chip">협업형 ★★★★</span><span class="t-chip hot">설계자형 ★★★★★</span>
+  </div>
+  <p class="sub" style="font-size:13.5px">당신은 어느 쪽인가요?</p>
+  <button class="btn accent" onclick="startQuiz()">30초 테스트 시작</button>
+</section>
+
+<!-- 문항 -->
+<section id="quiz" class="screen">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="progress-label" id="plabel"></div>
+  <div id="q-body"></div>
+  <button class="btn ghost" id="back-btn" onclick="goBack()">← 이전 문항</button>
+</section>
+
+<!-- 정답 공개 인터스티셜 -->
+<section id="reveal" class="screen center">
+  <div class="reveal-box slide-in">
+    <p>잠깐, 방금 8개 질문을 떠올려보세요.</p>
+    <p style="margin-top:14px"><span class="em">AI가 얼마나 똑똑한지 묻는 질문은<br>하나도 없었어요.</span></p>
+    <p style="margin-top:14px">전부 '내가 AI에게 뭘 말했는지'에 대한 질문이었죠. 결과가 갈리는 이유도 바로 거기에 있어요.</p>
+  </div>
+  <button class="btn accent" onclick="showResult()">내 유형 확인하기</button>
+</section>
+
+<!-- 결과 -->
+<section id="result" class="screen">
+  <div class="result-card slide-in">
+    <div class="nick-label">나는 이런 사람</div>
+    <div class="nick" id="r-nick"></div>
+    <div class="type-name" id="r-name"></div>
+    <div class="stars" id="r-stars"></div>
+    <p class="type-desc" id="r-desc"></p>
+  </div>
+
+  <div class="section-label">당신이 AI에게 말하지 않는 것</div>
+  <div class="unsaid" id="r-unsaid"></div>
+
+  <div class="section-label">응답 분포</div>
+  <div id="r-dist"></div>
+  <p class="growth" id="r-growth"></p>
+
+  <div class="section-label">함께 쓰면 최고의 페어</div>
+  <div class="pair-box" id="r-pair"></div>
+  <button class="btn outline" onclick="shareLink()" style="margin-top:8px">내 페어 찾으러 보내기</button>
+
+  <div class="section-label">당신의 페이지는 이미 정해져 있다</div>
+  <div class="pointer" id="r-pointer"></div>
+
+  <button class="btn accent" id="cta-btn" onclick="goPreorder()"></button>
+  <p class="gift" id="gift-line">예약판매 구매 인증 시 키캡 키링 선착 6명 증정</p>
+
+  <button class="btn outline" id="share-card-btn" onclick="shareCard()">결과 이미지 저장하기</button>
+  <button class="btn outline" id="share-link-btn" onclick="shareLink()">친구에게 테스트 보내기</button>
+  <div class="toast" id="toast"></div>
+
+  <p class="book-line" id="book-line"></p>
+  <button class="btn ghost" onclick="restart()">다시 테스트하기</button>
+</section>
+
+<script>
+"use strict";
+
+// ─────────────────────────────────────────────
+// 상수 · 데이터 (event-spec.md 정본과 동일)
+// ─────────────────────────────────────────────
+const PREORDER_URL = "https://litt.ly/ellieisfree";
+const PUB_DATE = "2026-07-21"; // 출간일 (D-day 배지)
+
+// 선택지 순서 고정: [0]검색형 [1]지시형 [2]협업형 [3]설계자형
+const QUESTIONS = [
+  { axis: "시작 조건", q: "AI에게 처음 일을 시킬 때, 당신의 첫 문장은?", a: [
+    "\"○○가 뭐야?\" 궁금한 걸 한 줄로 묻는다",
+    "\"○○ 정리해줘. 보고서처럼.\" 할 일을 명령한다",
+    "일단 시켜보고, 답을 보면서 대화로 고쳐나간다",
+    "시작 전에 목적·독자·형식·제외 조건부터 적는다" ]},
+  { axis: "요청 점검", q: "AI의 답이 마음에 안 들면?", a: [
+    "역시 AI는 아직 멀었다고 생각하고 창을 닫는다",
+    "\"다시 해줘. 더 잘.\" 같은 요청을 반복한다",
+    "어디가 왜 아쉬운지 말해주고 다시 시킨다",
+    "답이 아니라 내 요청문을 다시 읽고, 빠진 조건을 찾는다" ]},
+  { axis: "맥락 설명", q: "당신의 프롬프트 길이는 보통?", a: [
+    "한 줄. 검색어와 비슷하다",
+    "두세 줄. 해야 할 일과 형식을 적는다",
+    "대화가 쌓이며 길어진다. 처음은 짧다",
+    "처음부터 길다. 맥락·예시·제약을 미리 넣는다" ]},
+  { axis: "검증 조건", q: "AI가 그럴듯한 거짓(없는 논문·틀린 수치)을 내놨다면?", a: [
+    "AI가 거짓말쟁이라는 증거라고 생각한다",
+    "\"정확한 것만 줘\"라고 다시 명령한다",
+    "하나씩 검증해달라고 대화로 되짚는다",
+    "\"실재 확인된 것만, 없으면 없다고 답할 것\"을 처음부터 조건으로 건다" ]},
+  { axis: "형식 조건", q: "결과물의 형식(표·목차·분량)은 누가 정하나?", a: [
+    "생각해본 적 없다. 나오는 대로 본다",
+    "\"표로 만들어줘\" 정도는 말한다",
+    "초안을 받은 뒤 형식을 바꿔달라고 한다",
+    "요청할 때 형식·분량·예시 샘플까지 정해서 준다" ]},
+  { axis: "반복 구조", q: "매주 반복하는 업무를 AI로 처리한다면?", a: [
+    "그때그때 새로 물어본다",
+    "지난번에 쓴 명령문을 복사해서 다시 쓴다",
+    "지난 대화 이어서 \"지난번처럼\" 시킨다",
+    "조건·예시를 정리한 나만의 요청 틀을 만들어 다듬는다" ]},
+  { axis: "암묵 조건", q: "AI에게 일을 맡길 때 '말하지 않은 것'이 있다면?", a: [
+    "말 안 해도 알아서 해주는 게 AI 아닌가",
+    "중요한 건 말했으니 나머지는 AI 몫이다",
+    "빠진 게 보이면 대화 중에 채운다",
+    "말하지 않은 것이 결과를 정한다 — 그래서 먼저 적는다" ]},
+  { axis: "관점", q: "당신에게 AI란?", a: [
+    "더 빠른 검색창",
+    "말 잘 들어야 하는 부하 직원",
+    "주고받으며 일하는 동료",
+    "내가 설계한 조건 안에서 움직이는 시스템" ]},
+];
+
+// 별점 = 유형 고정값 (채점 규칙)
+const TYPES = [
+  { key: "search", name: "검색형", stars: "★★☆☆☆", theme: "theme-search", color: "#B7B7D6",
+    nick: "빛의 속도 질문러", tagline: "AI를 검색창처럼 쓰는 사람",
+    pair: { type: 3, why: "당신의 한 줄 질문에 조건을 붙여줄 사람" },
+    cta: "검색창처럼 쓰던 AI가 달라지는 법, 책으로 먼저 만나기",
+    desc: "당신은 AI를 '더 빠른 검색창'으로 쓰고 있다. AI가 멍청해 보였다면, 그건 당신이 아무 조건도 주지 않았기 때문이다. 프롬프트는 질문이 아니라 조건이다 — 이 한 문장이 당신의 결과를 바꾼다.",
+    pointer: "1장, 존재하지 않는 논문을 추천받은 사람의 이야기에서 시작하라." },
+  { key: "command", name: "지시형", stars: "★★★☆☆", theme: "theme-command", color: "#9C9DE0",
+    nick: "결과 먼저 지시러", tagline: "명령은 하지만 설명은 안 하는 사람",
+    pair: { type: 2, why: "당신의 명령에 대화를 붙여줄 사람" },
+    cta: "'보고서처럼'의 함정에서 빠져나오기, 책으로 먼저 만나기",
+    desc: "당신은 명령은 하지만 설명은 하지 않는다. '보고서처럼'이라는 말의 함정 — 형식만 요구하면 형식만 그럴듯한 답이 온다. 빠진 것은 지시가 아니라 조건이다.",
+    pointer: "'보고서처럼'의 함정 — 당신이 매번 밟는 그 지점이 책에 있다." },
+  { key: "collab", name: "협업형", stars: "★★★★☆", theme: "theme-collab", color: "#7678C4",
+    nick: "티키타카 조련사", tagline: "AI와 핑퐁을 잘 치는 사람",
+    pair: { type: 3, why: "당신의 핑퐁을 구조로 만들어줄 사람" },
+    cta: "핑퐁 세 번을 한 번으로 줄이는 설계, 책으로 먼저 만나기",
+    desc: "당신은 AI와 대화로 답을 다듬을 줄 안다. 다만 매번 핑퐁으로 고치는 시간, 절반은 줄일 수 있다. 처음부터 조건을 설계하면 세 번 주고받을 일이 한 번에 끝난다.",
+    pointer: "핑퐁 세 번을 한 번으로 줄이는 설계가 PART 2다." },
+  { key: "designer", name: "설계자형", stars: "★★★★★", theme: "theme-designer", color: "#8A8BD4",
+    nick: "조건의 건축가", tagline: "말하기 전에 조건부터 짓는 사람",
+    pair: { type: 0, why: "당신의 설계에 속도를 붙여줄 사람" },
+    cta: "설계 감각을 반복 가능한 구조로, 책으로 완성하기",
+    desc: "당신은 이미 설명을 설계하는 사람이다. 말하지 않은 것이 결과를 정한다는 걸 안다. 이제 그 감각을 반복 가능한 구조로 만들 차례다.",
+    pointer: "감각을 반복 가능한 구조로 — 당신은 이 책의 검증자다." },
+];
+
+// ─────────────────────────────────────────────
+// 채점 (순수 함수 — 자가검증 대상)
+// ─────────────────────────────────────────────
+function tally(answers) {
+  const counts = [0, 0, 0, 0];
+  answers.forEach(a => counts[a]++);
+  return counts;
+}
+// 최다 유형, 동점 시 상위 유형(설계자>협업>지시>검색) = 인덱스 큰 쪽 우선
+function decideType(answers) {
+  const counts = tally(answers);
+  let best = 3;
+  for (let i = 3; i >= 0; i--) if (counts[i] > counts[best]) best = i;
+  return best;
+}
+// ①·② 응답이 나온 문항의 조건 축 상위 2개 = "말하지 않는 것"
+function unsaidAxes(answers) {
+  return answers.map((a, i) => (a <= 1 ? QUESTIONS[i].axis : null)).filter(Boolean).slice(0, 2);
+}
+
+// ─────────────────────────────────────────────
+// 화면 전환 · 상태
+// ─────────────────────────────────────────────
+let answers = [];
+let current = 0;
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() { answers = []; current = 0; show("quiz"); renderQuestion(); }
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  document.getElementById("pbar").style.width = ((current + 1) / QUESTIONS.length * 100) + "%";
+  document.getElementById("plabel").textContent = (current + 1) + " / " + QUESTIONS.length;
+  const nums = ["①", "②", "③", "④"];
+  const body = document.getElementById("q-body");
+  body.innerHTML = "";
+  const wrap = document.createElement("div");
+  wrap.className = "slide-in";
+  const qt = document.createElement("div");
+  qt.className = "q-text";
+  qt.textContent = "Q" + (current + 1) + ". " + q.q;
+  wrap.appendChild(qt);
+  q.a.forEach((text, idx) => {
+    const b = document.createElement("button");
+    b.className = "choice";
+    b.innerHTML = "<span class='num'>" + nums[idx] + "</span>" + text.replace(/</g, "&lt;");
+    b.onclick = () => pick(idx);
+    wrap.appendChild(b);
+  });
+  body.appendChild(wrap);
+  document.getElementById("back-btn").style.visibility = current > 0 ? "visible" : "hidden";
+}
+
+function pick(idx) {
+  answers[current] = idx;
+  if (current < QUESTIONS.length - 1) { current++; renderQuestion(); }
+  else show("reveal");
+}
+
+function goBack() { if (current > 0) { current--; renderQuestion(); } }
+
+function showResult() {
+  const t = TYPES[decideType(answers)];
+  const res = document.getElementById("result");
+  res.className = "screen active " + t.theme;
+  document.getElementById("r-nick").textContent = t.nick;
+  document.getElementById("r-name").textContent = t.name;
+  document.getElementById("r-stars").textContent = t.stars;
+  document.getElementById("r-desc").textContent = t.desc;
+
+  const axes = unsaidAxes(answers);
+  document.getElementById("r-unsaid").innerHTML = axes.length
+    ? "<b>" + axes.join(", ") + "</b> — 말하지 않은 것이 결과를 정한다. 여기서부터 채우면 된다."
+    : "지금은 비어 있는 조건이 거의 없다. 문제는 조건이 아니라 <b>구조의 반복 가능성</b>이다.";
+
+  const counts = tally(answers);
+  const max = Math.max(...counts, 1);
+  const mine = decideType(answers);
+  document.getElementById("r-dist").innerHTML = TYPES.map((tp, i) =>
+    "<div class='dist-row" + (i === mine ? " mine" : "") + "'>" +
+    "<span class='name'>" + tp.name + "</span>" +
+    "<div class='bar-bg'><div class='bar' style='width:" + (counts[i] / max * 100) + "%'></div></div>" +
+    "<span class='cnt'>" + counts[i] + "</span></div>").join("");
+
+  // 성장 서사: 설계자 기질 게이지 (재도전·책 연결 동기)
+  const dCount = counts[3];
+  document.getElementById("r-growth").innerHTML = mine === 3
+    ? "설계자 기질 <b>8분의 " + dCount + "</b> — 남은 과제는 반복 가능한 구조다."
+    : "당신 안의 설계자 기질 <b>8분의 " + dCount + "</b> — 조건을 하나씩 정할 때마다 유형이 바뀐다.";
+
+  // 궁합: 친구에게 보낼 이유
+  const pair = TYPES[t.pair.type];
+  document.getElementById("r-pair").innerHTML =
+    "<span class='pair-name'>" + pair.nick + " (" + pair.name + ")</span> — " + t.pair.why +
+    ". 주변에 있을 것 같은 사람에게 테스트를 보내보세요.";
+
+  document.getElementById("r-pointer").textContent = t.pointer;
+  document.getElementById("cta-btn").textContent = t.cta;
+  show("result");
+  res.classList.add(t.theme);
+}
+
+function restart() { show("intro"); }
+function goPreorder() { window.open(PREORDER_URL, "_blank"); }
+
+// 친구에게 보내기 — 다크소셜(카톡·DM) 루프. 모바일은 OS 공유시트, 미지원 시 문구 복사
+function shareLink() {
+  const t = TYPES[decideType(answers)];
+  const url = location.protocol === "file:" ? PREORDER_URL : location.href.split("#")[0];
+  const text = "나는 '" + t.nick + "'(" + t.name + ")이래 — " + t.tagline + ".\n내 최고의 페어는 '" + TYPES[t.pair.type].nick + "'이라는데, 너는 어떤 유형이야? 30초 테스트 👉 " + url;
+  if (navigator.share) {
+    navigator.share({ text: text }).catch(() => {});
+    return;
+  }
+  navigator.clipboard.writeText(text).then(() =>
+    toast("공유 문구가 복사됐어요. 붙여넣기만 하면 돼요!"));
+}
+
+// 출간일 기준 문구 자동 전환 (출간 후에도 상시 사용 가능)
+const DAYS_TO_PUB = Math.ceil((new Date(PUB_DATE + "T00:00:00+09:00") - new Date()) / 86400000);
+const IS_PRE = DAYS_TO_PUB > 0;
+// 판매 상태 문구: 예판 기간에만 '예약판매', 이후는 담백하게
+const SALE_LINE = IS_PRE ? "7/21 출간 · 예약판매 중" : "서점에서 만날 수 있어요";
+(function () {
+  const el = document.getElementById("dday-badge");
+  if (IS_PRE) el.textContent = "7/21 출간 D-" + DAYS_TO_PUB;
+  else if (DAYS_TO_PUB === 0) el.textContent = "오늘 출간";
+  else el.textContent = "30초 자가진단";
+})();
+
+// 공유 능력 감지 — 되는 것만 약속한다 (버튼 문구 정직화)
+(function () {
+  const testFile = typeof File !== "undefined" ? new File([""], "t.png", { type: "image/png" }) : null;
+  const canShareImg = !!(navigator.canShare && testFile && navigator.canShare({ files: [testFile] }));
+  document.getElementById("share-card-btn").textContent =
+    canShareImg ? "결과 이미지 공유하기" : "결과 이미지 저장하기";
+  document.getElementById("share-link-btn").textContent =
+    navigator.share ? "친구에게 테스트 보내기" : "공유 문구 복사하기";
+})();
+
+// 경품 줄은 예판~출간 직후(+2일)에만 노출 — 이후는 상시 콘텐츠로 사용
+(function () {
+  if (DAYS_TO_PUB < -2) document.getElementById("gift-line").style.display = "none";
+  document.getElementById("book-line").textContent =
+    "『왜 내가 쓰는 AI만 멍청해 보일까?』 — " + SALE_LINE + " · @ellieisfree";
+})();
+
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("on");
+  setTimeout(() => el.classList.remove("on"), 2600);
+}
+
+// ─────────────────────────────────────────────
+// 스토리 공유 카드 (1080×1920 canvas)
+// ─────────────────────────────────────────────
+function rr(x, X, y, w, h, r) { // roundRect 경로 (구브라우저 폴백 포함)
+  if (x.roundRect) { x.beginPath(); x.roundRect(X, y, w, h, r); }
+  else { x.beginPath(); x.rect(X, y, w, h); }
+}
+const KO = "-apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif";
+
+// 유형별 엠블럼 글리프 (외부 에셋 없이 벡터로 그림)
+function drawGlyph(x, key, cx, cy, s, color) {
+  x.save();
+  x.strokeStyle = color; x.fillStyle = color;
+  x.lineWidth = s * 0.13; x.lineCap = "round"; x.lineJoin = "round";
+  if (key === "search") {          // 돋보기
+    x.beginPath(); x.arc(cx - s * 0.12, cy - s * 0.12, s * 0.42, 0, Math.PI * 2); x.stroke();
+    x.beginPath(); x.moveTo(cx + s * 0.22, cy + 0.22 * s); x.lineTo(cx + s * 0.55, cy + s * 0.55); x.stroke();
+  } else if (key === "command") {  // 한 방향 화살표
+    x.beginPath(); x.moveTo(cx - s * 0.55, cy); x.lineTo(cx + s * 0.4, cy); x.stroke();
+    x.beginPath(); x.moveTo(cx + s * 0.15, cy - s * 0.3); x.lineTo(cx + s * 0.55, cy); x.lineTo(cx + s * 0.15, cy + s * 0.3); x.stroke();
+  } else if (key === "collab") {   // 주고받는 화살표(핑퐁)
+    x.beginPath(); x.moveTo(cx - s * 0.5, cy - s * 0.22); x.lineTo(cx + s * 0.3, cy - s * 0.22); x.stroke();
+    x.beginPath(); x.moveTo(cx + s * 0.1, cy - s * 0.45); x.lineTo(cx + s * 0.42, cy - s * 0.22); x.lineTo(cx + s * 0.1, cy + s * 0.01); x.stroke();
+    x.beginPath(); x.moveTo(cx + s * 0.5, cy + s * 0.28); x.lineTo(cx - s * 0.3, cy + s * 0.28); x.stroke();
+    x.beginPath(); x.moveTo(cx - s * 0.1, cy + s * 0.05); x.lineTo(cx - s * 0.42, cy + s * 0.28); x.lineTo(cx - s * 0.1, cy + s * 0.51); x.stroke();
+  } else {                         // 설계자: 청사진 격자 + 기준점
+    x.lineWidth = s * 0.09;
+    x.strokeRect(cx - s * 0.45, cy - s * 0.45, s * 0.9, s * 0.9);
+    x.beginPath(); x.moveTo(cx - s * 0.45, cy); x.lineTo(cx + s * 0.45, cy); x.stroke();
+    x.beginPath(); x.moveTo(cx, cy - s * 0.45); x.lineTo(cx, cy + s * 0.45); x.stroke();
+    x.beginPath(); x.arc(cx, cy, s * 0.13, 0, Math.PI * 2); x.fill();
+  }
+  x.restore();
+}
+
+function sparkle(x, cx, cy, s, color, alpha) {
+  x.save(); x.globalAlpha = alpha; x.fillStyle = color;
+  x.beginPath();
+  x.moveTo(cx, cy - s); x.quadraticCurveTo(cx + s * 0.18, cy - s * 0.18, cx + s, cy);
+  x.quadraticCurveTo(cx + s * 0.18, cy + s * 0.18, cx, cy + s);
+  x.quadraticCurveTo(cx - s * 0.18, cy + s * 0.18, cx - s, cy);
+  x.quadraticCurveTo(cx - s * 0.18, cy - s * 0.18, cx, cy - s);
+  x.fill(); x.restore();
+}
+
+function drawCard() {
+  const mine = decideType(answers);
+  const t = TYPES[mine];
+  const counts = tally(answers);
+  const axes = unsaidAxes(answers);
+  const c = document.createElement("canvas");
+  c.width = 1080; c.height = 1920;
+  const x = c.getContext("2d");
+
+  // 배경: 딥 네이비 그라데이션 + 유형 컬러 글로우
+  const bg = x.createLinearGradient(0, 0, 0, 1920);
+  bg.addColorStop(0, "#14142a"); bg.addColorStop(0.55, "#131322"); bg.addColorStop(1, "#1b1b30");
+  x.fillStyle = bg; x.fillRect(0, 0, 1080, 1920);
+  let g = x.createRadialGradient(540, 640, 0, 540, 640, 820);
+  g.addColorStop(0, t.color + "40"); g.addColorStop(1, "rgba(0,0,0,0)");
+  x.fillStyle = g; x.fillRect(0, 0, 1080, 1920);
+
+  // 도트 그리드(상·하단 여백에만, 은은하게)
+  x.fillStyle = "rgba(255,255,255,0.05)";
+  for (let gy = 120; gy < 1860; gy += 60) {
+    if (gy > 560 && gy < 1120) continue; // 중앙 타이포 영역 비움
+    for (let gx = 120; gx < 1020; gx += 60) {
+      x.beginPath(); x.arc(gx, gy, 3, 0, Math.PI * 2); x.fill();
+    }
+  }
+
+  // 외곽 프레임
+  rr(x, 44, 44, 992, 1832, 48);
+  x.strokeStyle = t.color + "55"; x.lineWidth = 3; x.stroke();
+
+  // 스파클 포인트
+  sparkle(x, 160, 330, 22, t.color, 0.8);
+  sparkle(x, 930, 250, 14, "#ffffff", 0.5);
+  sparkle(x, 890, 1060, 18, t.color, 0.6);
+  sparkle(x, 175, 1140, 12, "#ffffff", 0.4);
+
+  // 상단 뱃지 필
+  x.textAlign = "center";
+  x.font = "700 36px " + KO;
+  rr(x, 315, 128, 450, 70, 35); x.strokeStyle = t.color; x.lineWidth = 3; x.stroke();
+  x.fillStyle = t.color; x.fillText("30초 AI 활용 유형 테스트", 540, 176);
+
+  // 훅
+  x.fillStyle = "#ffffff"; x.font = "800 74px " + KO;
+  x.fillText("내 AI가 멍청했던 게", 540, 330);
+  x.fillText("아니었다", 540, 430);
+
+  // 엠블럼: 이중 링 + 유형 글리프
+  const ey = 620;
+  x.beginPath(); x.arc(540, ey, 108, 0, Math.PI * 2);
+  x.fillStyle = t.color + "22"; x.fill();
+  x.beginPath(); x.arc(540, ey, 108, 0, Math.PI * 2);
+  x.strokeStyle = t.color; x.lineWidth = 5; x.stroke();
+  x.beginPath(); x.arc(540, ey, 128, -Math.PI * 0.25, Math.PI * 0.9);
+  x.strokeStyle = t.color + "66"; x.lineWidth = 3; x.stroke();
+  drawGlyph(x, t.key, 540, ey, 92, "#ffffff");
+
+  // 정체성 타이포
+  x.fillStyle = "#b6b6c8"; x.font = "600 42px " + KO;
+  x.fillText("나는 이런 사람", 540, 830);
+  x.fillStyle = "#ffffff"; x.font = "900 104px " + KO;
+  x.fillText(t.nick, 540, 965);
+  x.fillStyle = t.color; x.font = "800 56px " + KO;
+  x.fillText(t.name + "  " + t.stars, 540, 1065);
+  x.fillStyle = "#d9d9e6"; x.font = "600 44px " + KO;
+  x.fillText(t.tagline, 540, 1160);
+
+  // 개인화: 내가 말하지 않는 것 (칩)
+  const chipY = 1290;
+  x.fillStyle = "#8f8fa3"; x.font = "600 36px " + KO;
+  x.fillText(axes.length ? "내가 AI에게 말하지 않는 것" : "빈 조건이 거의 없는 사람", 540, chipY);
+  if (axes.length) {
+    const chipW = 300, chipH = 82, gap = 28;
+    const total = axes.length * chipW + (axes.length - 1) * gap;
+    let cx = 540 - total / 2;
+    axes.forEach(axis => {
+      rr(x, cx, chipY + 34, chipW, chipH, 41);
+      x.fillStyle = t.color + "2e"; x.fill();
+      x.strokeStyle = t.color; x.lineWidth = 3; x.stroke();
+      x.fillStyle = "#ffffff"; x.font = "700 40px " + KO;
+      x.fillText(axis, cx + chipW / 2, chipY + 89);
+      cx += chipW + gap;
+    });
+  }
+
+  // 응답 분포 (라운드 막대)
+  const bx = 310, bw = 520, bh = 28, rowGap = 62, by = 1470;
+  TYPES.forEach((tp, i) => {
+    const y = by + i * rowGap;
+    x.textAlign = "left"; x.font = "600 34px " + KO;
+    x.fillStyle = i === mine ? "#ffffff" : "#8f8fa3";
+    x.fillText(tp.name, 130, y + bh - 2);
+    rr(x, bx, y, bw, bh, 14); x.fillStyle = "rgba(255,255,255,0.10)"; x.fill();
+    if (counts[i] > 0) {
+      rr(x, bx, y, Math.max(bw * (counts[i] / 8), bh), bh, 14);
+      x.fillStyle = tp.color; x.globalAlpha = i === mine ? 1 : 0.4; x.fill(); x.globalAlpha = 1;
+    }
+    x.fillStyle = i === mine ? "#ffffff" : "#8f8fa3";
+    x.fillText(String(counts[i]), bx + bw + 24, y + bh - 2);
+  });
+
+  // 하단: 참여 유도(주) + 책(부) — 홍보 톤 최소화
+  x.textAlign = "center";
+  x.fillStyle = t.color; x.font = "700 42px " + KO;
+  x.fillText("너는 어떤 유형일까?", 540, 1745);
+  x.fillStyle = "#b6b6c8"; x.font = "600 36px " + KO;
+  x.fillText("30초 테스트 → @ellieisfree 프로필 링크", 540, 1802);
+  x.fillStyle = "#77778c"; x.font = "32px " + KO;
+  x.fillText("『왜 내가 쓰는 AI만 멍청해 보일까?』에서 시작된 테스트", 540, 1862);
+  return c;
+}
+
+function shareCard() {
+  const canvas = drawCard();
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], "ai-type-result.png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: "30초 AI 활용 유형 테스트" });
+        return;
+      } catch (e) { /* 사용자가 취소하면 폴백 생략 */ if (e.name === "AbortError") return; }
+    }
+    // 폴백: 이미지 다운로드 + 다음 행동 안내
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "ai-type-result.png";
+    a.click();
+    toast("이미지가 저장됐어요. 스토리나 프로필에 올려보세요!");
+  }, "image/png");
+}
+
+</script>
+</body>
+</html>
