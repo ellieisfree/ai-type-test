@@ -49,7 +49,7 @@
   .btn.outline { background: var(--card); color: var(--ink); border: 1.5px solid var(--line); font-weight: 600; margin-top: 10px; }
   .btn.cta-main {
     font-size: 18px; padding: 18px 16px; border-radius: 16px; margin-top: 26px;
-    box-shadow: 0 6px 18px rgba(102,103,171,.35); line-height: 1.4; word-break: keep-all; white-space: normal;
+    box-shadow: 0 6px 18px rgba(102,103,171,.35); line-height: 1.4; word-break: keep-all; white-space: pre-line;
   }
   .btn:active { transform: scale(.985); }
   /* 문항 */
@@ -92,7 +92,7 @@
   .pair-box { background: var(--card); border-radius: 14px; padding: 16px; font-size: 15px; word-break: keep-all; }
   .pair-box .pair-name { font-weight: 800; color: var(--type-color, var(--accent)); }
   .pointer { background: var(--card); border-left: 4px solid var(--type-color, var(--accent)); border-radius: 0 12px 12px 0; padding: 14px 16px; font-size: 15px; word-break: keep-all; }
-  .book-line { font-size: 14px; color: var(--sub); text-align: center; margin-top: 24px; word-break: keep-all; }
+  .book-line { font-size: 14px; color: var(--sub); text-align: center; margin-top: 24px; word-break: keep-all; white-space: pre-line; }
   .toast {
     position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px);
     background: var(--ink); color: #fff; font-size: 14px; padding: 12px 20px;
@@ -252,25 +252,25 @@ const TYPES = [
   { key: "search", name: "검색형", stars: "★★☆☆☆", theme: "theme-search", color: "#B7B7D6",
     nick: "빛의 속도 질문러", tagline: "AI를 검색창처럼 쓰는 사람",
     pair: { type: 3, why: "당신의 한 줄 질문에 조건을 붙여줄 사람" },
-    cta: "검색창처럼 쓰던 AI가 달라지는 법 → 책에서 확인하기",
+    cta: "검색창처럼 쓰던 AI가 달라지는 법\n→ 책에서 확인하기",
     desc: "당신은 AI를 '더 빠른 검색창'으로 쓰고 있다. AI가 멍청해 보였다면, 그건 당신이 아무 조건도 주지 않았기 때문이다. 프롬프트는 질문이 아니라 조건이다 — 이 한 문장이 당신의 결과를 바꾼다.",
     pointer: "1장, 존재하지 않는 논문을 추천받은 사람의 이야기에서 시작하라." },
   { key: "command", name: "지시형", stars: "★★★☆☆", theme: "theme-command", color: "#9C9DE0",
     nick: "결과 먼저 지시러", tagline: "명령은 하지만 설명은 안 하는 사람",
     pair: { type: 2, why: "당신의 명령에 대화를 붙여줄 사람" },
-    cta: "'보고서처럼'의 함정에서 빠져나오는 법 → 책에서 확인하기",
+    cta: "'보고서처럼'의 함정에서 빠져나오는 법\n→ 책에서 확인하기",
     desc: "당신은 명령은 하지만 설명은 하지 않는다. '보고서처럼'이라는 말의 함정 — 형식만 요구하면 형식만 그럴듯한 답이 온다. 빠진 것은 지시가 아니라 조건이다.",
     pointer: "'보고서처럼'의 함정 — 당신이 매번 밟는 그 지점이 책에 있다." },
   { key: "collab", name: "협업형", stars: "★★★★☆", theme: "theme-collab", color: "#7678C4",
     nick: "티키타카 조련사", tagline: "AI와 핑퐁을 잘 치는 사람",
     pair: { type: 3, why: "당신의 핑퐁을 구조로 만들어줄 사람" },
-    cta: "핑퐁 세 번을 한 번으로 줄이는 설계 → 책에서 확인하기",
+    cta: "핑퐁 세 번을 한 번으로 줄이는 설계\n→ 책에서 확인하기",
     desc: "당신은 AI와 대화로 답을 다듬을 줄 안다. 다만 매번 핑퐁으로 고치는 시간, 절반은 줄일 수 있다. 처음부터 조건을 설계하면 세 번 주고받을 일이 한 번에 끝난다.",
     pointer: "핑퐁 세 번을 한 번으로 줄이는 설계가 PART 2다." },
   { key: "designer", name: "설계자형", stars: "★★★★★", theme: "theme-designer", color: "#8A8BD4",
     nick: "조건의 건축가", tagline: "말하기 전에 조건부터 짓는 사람",
     pair: { type: 0, why: "당신의 설계에 속도를 붙여줄 사람" },
-    cta: "설계 감각을 반복 가능한 구조로 → 책에서 확인하기",
+    cta: "설계 감각을 반복 가능한 구조로\n→ 책에서 확인하기",
     desc: "당신은 이미 설명을 설계하는 사람이다. 말하지 않은 것이 결과를 정한다는 걸 안다. 이제 그 감각을 반복 가능한 구조로 만들 차례다.",
     pointer: "감각을 반복 가능한 구조로 — 당신은 이 책의 검증자다." },
 ];
@@ -452,7 +452,7 @@ const SALE_LINE = IS_PRE ? "7/21 출간 · 예약판매 중" : "서점에서 만
 
 (function () {
   document.getElementById("book-line").textContent =
-    "『왜 내가 쓰는 AI만 멍청해 보일까?』 — " + SALE_LINE + " · @ellieisfree";
+    "『왜 내가 쓰는 AI만 멍청해 보일까?』\n" + SALE_LINE + " · @ellieisfree";
 })();
 
 function toast(msg) {
