@@ -49,8 +49,9 @@
   .btn.outline { background: var(--card); color: var(--ink); border: 1.5px solid var(--line); font-weight: 600; margin-top: 10px; }
   .btn.cta-main {
     font-size: 18px; padding: 18px 16px; border-radius: 16px; margin-top: 26px;
-    box-shadow: 0 6px 18px rgba(102,103,171,.35); line-height: 1.4; word-break: keep-all; white-space: pre-line;
+    box-shadow: 0 6px 18px rgba(102,103,171,.35); line-height: 1.4; word-break: keep-all;
   }
+  .btn.cta-main .cta-sub { display: block; font-size: 15px; font-weight: 600; opacity: .88; margin-top: 3px; }
   .btn:active { transform: scale(.985); }
   /* 문항 */
   .progress-wrap { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
@@ -84,7 +85,10 @@
   .t-chip .blk i { width: 8px; height: 8px; border-radius: 2.5px; }
   .t-chip .blk i.on { background: var(--accent); opacity: .75; }
   .t-chip.hot .blk i.on { opacity: 1; }
-  .type-desc { font-size: 15.5px; word-break: keep-all; overflow-wrap: break-word; white-space: pre-line; }
+  .type-desc { font-size: 15.5px; word-break: keep-all; overflow-wrap: break-word; }
+  .type-desc .lead { font-weight: 800; font-size: 16.5px; }
+  .pair-box .pair-guide { display: block; font-size: 13.5px; color: var(--sub); margin-top: 4px; }
+  .book-line .bl-title { font-weight: 700; font-size: 15px; color: var(--ink); }
   .section-label { font-size: 13px; font-weight: 700; color: var(--sub); margin: 22px 0 8px; letter-spacing: .04em; }
   .unsaid { background: var(--card); border-radius: 14px; padding: 16px; font-size: 15px; word-break: keep-all; }
   .unsaid b { color: var(--type-color, var(--accent)); }
@@ -368,7 +372,9 @@ function showResult() {
   document.getElementById("r-name").textContent = t.name;
   document.getElementById("r-stars").innerHTML = "<span class='blk'>" +
     Array.from({length: 5}, (_, i) => i < t.level ? "<i class='on'></i>" : "<i></i>").join("") + "</span>";
-  document.getElementById("r-desc").textContent = t.desc;
+  const descLines = t.desc.split("\n");
+  document.getElementById("r-desc").innerHTML =
+    "<span class=\"lead\">" + descLines[0] + "</span><br>" + descLines.slice(1).join("<br>");
 
   const axes = unsaidAxes(answers);
   document.getElementById("r-unsaid").innerHTML = axes.length
@@ -394,9 +400,11 @@ function showResult() {
   const pair = TYPES[t.pair.type];
   document.getElementById("r-pair").innerHTML =
     "<span class='pair-name'>" + pair.nick + " (" + pair.name + ")</span>. " + t.pair.why +
-    ".<br>테스트를 보내거나, 스토리에 결과를 올리고 그 사람을 태그해보세요.";
+    ".<span class=\"pair-guide\">테스트를 보내거나, 스토리에 결과를 올리고 그 사람을 태그해보세요.</span>";
 
-  document.getElementById("cta-btn").textContent = t.cta;
+  const ctaLines = t.cta.split("\n");
+  document.getElementById("cta-btn").innerHTML =
+    ctaLines[0] + "<span class=\"cta-sub\">" + ctaLines[1] + "</span>";
   show("result");
   res.classList.add(t.theme);
   track("result-" + t.key);
@@ -448,8 +456,8 @@ const IS_PRE = DAYS_TO_PUB > 0;
 })();
 
 (function () {
-  document.getElementById("book-line").textContent =
-    "『왜 내가 쓰는 AI만 멍청해 보일까?』\n@ellieisfree";
+  document.getElementById("book-line").innerHTML =
+    "<span class=\"bl-title\">『왜 내가 쓰는 AI만 멍청해 보일까?』</span><br>@ellieisfree";
 })();
 
 function toast(msg) {
