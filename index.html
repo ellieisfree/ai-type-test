@@ -112,7 +112,7 @@
 <section id="intro" class="screen active center">
   <span class="badge" id="dday-badge">7/21 출간</span>
   <h1>왜 내가 쓰는 AI만<br>멍청해 보일까?</h1>
-  <p class="sub">같은 AI를 쓰는데 왜 내 결과만 이럴까요? 8개 질문, 30초면 당신이 AI를 쓰는 방식이 드러납니다.</p>
+  <p class="sub">같은 AI를 쓰는데 왜 내 결과만 이럴까요?<br>8개 질문, 30초면 당신이 AI를 쓰는 방식이 드러납니다.</p>
   <div class="teaser">
     <span class="t-chip">검색형 ★★</span><span class="t-chip">지시형 ★★★</span>
     <span class="t-chip">협업형 ★★★★</span><span class="t-chip hot">설계자형 ★★★★★</span>
@@ -248,17 +248,17 @@ const TYPES = [
     nick: "빛의 속도 질문러", tagline: "AI를 검색창처럼 쓰는 사람",
     pair: { type: 3, why: "당신의 한 줄 질문에 조건을 붙여줄 사람" },
     cta: "검색창처럼 쓰던 AI가 달라지는 법\n→ 책에서 확인하기",
-    desc: "당신은 AI를 '더 빠른 검색창'으로 쓰고 있다. AI가 멍청해 보였다면, 그건 당신이 아무 조건도 주지 않았기 때문이다. 프롬프트는 질문이 아니라 조건이다. 이 한 문장이 당신의 결과를 바꾼다." },
+    desc: "당신은 AI를 '더 빠른 검색창'으로 쓰고 있다.\nAI가 멍청해 보였다면, 그건 당신이 아무 조건도 주지 않았기 때문이다.\n프롬프트는 질문이 아니라 조건이다. 이 한 문장이 당신의 결과를 바꾼다." },
   { key: "command", name: "지시형", stars: "★★★☆☆", theme: "theme-command", color: "#9C9DE0",
     nick: "결과 먼저 지시러", tagline: "명령은 하지만 설명은 안 하는 사람",
     pair: { type: 2, why: "당신의 명령에 대화를 붙여줄 사람" },
     cta: "'보고서처럼'의 함정에서 빠져나오는 법\n→ 책에서 확인하기",
-    desc: "당신은 명령은 하지만 설명은 하지 않는다. '보고서처럼'이라는 말의 함정. 형식만 요구하면 형식만 그럴듯한 답이 온다. 빠진 것은 지시가 아니라 조건이다." },
+    desc: "당신은 명령은 하지만 설명은 하지 않는다.\n'보고서처럼'이라는 말의 함정. 형식만 요구하면 형식만 그럴듯한 답이 온다.\n빠진 것은 지시가 아니라 조건이다." },
   { key: "collab", name: "협업형", stars: "★★★★☆", theme: "theme-collab", color: "#7678C4",
     nick: "티키타카 조련사", tagline: "AI와 핑퐁을 잘 치는 사람",
     pair: { type: 3, why: "당신의 핑퐁을 구조로 만들어줄 사람" },
     cta: "핑퐁 세 번을 한 번으로 줄이는 설계\n→ 책에서 확인하기",
-    desc: "당신은 AI와 대화로 답을 다듬을 줄 안다. 다만 매번 핑퐁으로 고치는 시간, 절반은 줄일 수 있다. 처음부터 조건을 설계하면 세 번 주고받을 일이 한 번에 끝난다." },
+    desc: "당신은 AI와 대화로 답을 다듬을 줄 안다.\n다만 매번 핑퐁으로 고치는 시간, 절반은 줄일 수 있다.\n처음부터 조건을 설계하면 세 번 주고받을 일이 한 번에 끝난다." },
   { key: "designer", name: "설계자형", stars: "★★★★★", theme: "theme-designer", color: "#8A8BD4",
     nick: "조건의 건축가", tagline: "말하기 전에 조건부터 짓는 사람",
     pair: { type: 0, why: "당신의 설계에 속도를 붙여줄 사람" },
@@ -365,7 +365,7 @@ function showResult() {
   const axes = unsaidAxes(answers);
   document.getElementById("r-unsaid").innerHTML = axes.length
     ? "<b>" + axes.join(", ") + "</b>.<br>말하지 않은 것이 결과를 정한다. 여기서부터 채우면 된다."
-    : "지금은 비어 있는 조건이 거의 없다. 문제는 조건이 아니라 <b>구조의 반복 가능성</b>이다.";
+    : "지금은 비어 있는 조건이 거의 없다.<br>문제는 조건이 아니라 <b>구조의 반복 가능성</b>이다.";
 
   const counts = tally(answers);
   const max = Math.max(...counts, 1);
@@ -379,14 +379,14 @@ function showResult() {
   // 성장 서사: 설계자 기질 게이지 (재도전·책 연결 동기)
   const dCount = counts[3];
   document.getElementById("r-growth").innerHTML = mine === 3
-    ? "설계자 기질 <b>8분의 " + dCount + "</b>. 남은 과제는 반복 가능한 구조다."
-    : "당신 안의 설계자 기질 <b>8분의 " + dCount + "</b>. 조건을 하나씩 정할 때마다 유형이 바뀐다.";
+    ? "설계자 기질 <b>8분의 " + dCount + "</b>.<br>남은 과제는 반복 가능한 구조다."
+    : "당신 안의 설계자 기질 <b>8분의 " + dCount + "</b>.<br>조건을 하나씩 정할 때마다 유형이 바뀐다.";
 
   // 궁합: 친구에게 보낼 이유
   const pair = TYPES[t.pair.type];
   document.getElementById("r-pair").innerHTML =
     "<span class='pair-name'>" + pair.nick + " (" + pair.name + ")</span>. " + t.pair.why +
-    ". 테스트를 보내거나, 스토리에 결과를 올리고 그 사람을 태그해보세요.";
+    ".<br>테스트를 보내거나, 스토리에 결과를 올리고 그 사람을 태그해보세요.";
 
   document.getElementById("cta-btn").textContent = t.cta;
   show("result");
