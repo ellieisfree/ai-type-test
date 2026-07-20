@@ -62,7 +62,7 @@
     display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
     background: var(--card); border: 1.5px solid var(--line); border-radius: 14px;
     padding: 16px; margin-bottom: 10px; font-size: 16px; line-height: 1.5; min-height: 56px;
-    word-break: keep-all; color: var(--ink); transition: border-color .15s, background .15s;
+    word-break: keep-all; white-space: pre-line; color: var(--ink); transition: border-color .15s, background .15s;
   }
   .choice:active { border-color: var(--accent); background: #f2f2fb; }
   .choice .num { color: var(--accent); font-weight: 700; margin-right: 6px; }
@@ -214,7 +214,7 @@ const QUESTIONS = [
     "역시 AI는 아직 멀었다고 생각하고 창을 닫는다",
     "\"다시 해줘. 더 잘.\" 같은 요청을 반복한다",
     "어디가 왜 아쉬운지 말해주고 다시 시킨다",
-    "답이 아니라 내 요청문을 다시 읽고, 빠진 조건을 찾는다" ]},
+    "답이 아니라 내 요청문을 다시 읽고,\n빠진 조건을 찾는다" ]},
   { axis: "맥락 설명", q: "당신의 프롬프트 길이는 보통?", a: [
     "한 줄. 검색어와 비슷하다",
     "두세 줄. 해야 할 일과 형식을 적는다",
@@ -239,7 +239,7 @@ const QUESTIONS = [
     "말 안 해도 알아서 해주는 게 AI 아닌가",
     "중요한 건 말했으니 나머지는 AI 몫이다",
     "빠진 게 보이면 대화 중에 채운다",
-    "말하지 않은 것이 결과를 정한다. 그래서 먼저 적는다" ]},
+    "말하지 않은 것이 결과를 정한다.\n그래서 먼저 적는다" ]},
   { axis: "관점", q: "당신에게 AI란?", a: [
     "더 빠른 검색창",
     "말 잘 들어야 하는 부하 직원",
